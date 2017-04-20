@@ -49,8 +49,6 @@
 <h1>api documentation for
     <a
 
-        href="https://github.com/dshaw/replify"
-
     >replify (v1.2.0)</a>
 </h1>
 <h4>Easily add a REPL to your Node.js app.</h4>
@@ -61,12 +59,128 @@
 
     <li class="apidocModuleLi"><a href="#apidoc.module.replify">module replify</a><ol>
 
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.replify.replify">
+            function <span class="apidocSignatureSpan"></span>replify
+            <span class="apidocSignatureSpan">(options, app, contexts)</span>
+            </a>
+
+        </li>
+
     </ol></li>
 
 </ol></div>
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.replify" id="apidoc.module.replify">module replify</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.replify.replify" id="apidoc.element.replify.replify">
+        function <span class="apidocSignatureSpan"></span>replify
+        <span class="apidocSignatureSpan">(options, app, contexts)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function replify(options, app, contexts) {
+  options = (options &#x26;&#x26; options.name) ? options : { name: options }
+
+  options.app                         || (options.app = app)
+  options.columns                     || (options.columns = 132)
+  options.contexts                    || (options.contexts = (typeof contexts === &#x27;object&#x27;) ? contexts : {})
+  options.extension                   || (options.extension = &#x27;.sock&#x27;)
+  options.logger                      || (options.logger = console)
+  options.name                        || (options.name = &#x27;replify&#x27;)
+  options.path                        || (options.path = &#x27;/tmp/repl&#x27;)
+  options.start                       || (options.start = repl.start)
+  options.hasOwnProperty(&#x27;useColors&#x27;) || (options.useColors = true)
+
+  options.replPath = cleanPipeName(options.path + path.sep + options.name + options.extension)
+
+  var logger = options.logger
+    , replServer = net.createServer()
+
+  replServer.on(&#x27;connection&#x27;, function onRequest(socket) {
+    var rep = null
+        , replOptions = {
+          prompt: options.name + &#x27;&#x3e; &#x27;
+          , input: socket
+          , output: socket
+          , terminal: true
+          , useGlobal: false
+          , useColors: options.useColors
+        }
+
+    // Set screen width. Especially useful for autocomplete.
+    // Since we expose the socket context, we can view
+    // You can modify this locally in your repl with `socket.columns`.
+    socket.columns = options.columns
+
+    // start the repl instance
+    if (typeof fs.exists === &#x27;undefined&#x27;) { // We&#x27;re in node v0.6. Start legacy repl.
+
+      logger.warn(&#x27;starting legacy repl&#x27;)
+      rep = repl.start(replOptions.prompt, socket)
+
+    } else {
+
+      rep = options.start(replOptions)
+      rep.on(&#x27;exit&#x27;, socket.end.bind(socket))
+      rep.on(&#x27;error&#x27;, function (err) {
+        logger.error(&#x27;repl error&#x27;, err)
+      })
+
+    }
+
+    // expose the socket itself to the repl
+    rep.context.replify = options
+
+    // expose the socket itself to the repl
+    rep.context.socket = socket
+
+    if (options.app) {
+      rep.context.app = options.app
+    }
+
+    Object.keys(options.contexts).forEach(function (key) {
+      if (rep.context[key]) {
+        // don&#x27;t pave over existing contexts
+        logger.warn(&#x27;unable to register context: &#x27; + key)
+      } else {
+        rep.context[key] = options.contexts[key]
+      }
+    })
+  })
+
+  replServer.on(&#x27;error&#x27;, function (err) {
+    logger.error(&#x27;repl server error&#x27;, err)
+  })
+
+  var start = replServer.listen.bind(replServer, options.replPath)
+
+  // with windows, pipes are different, so we don&#x27;t actually need to create
+  // anything and we go ahead and listen right away
+  if (process.platform === &#x27;win32&#x27;) {
+    start()
+  } else {
+    fs.mkdir(options.path, function (err) {
+      if (err &#x26;&#x26; err.code !== &#x27;EEXIST&#x27;) {
+        return logger.error(&#x27;error making repl directory: &#x27; + options.path, err)
+      }
+
+      fs.unlink(options.replPath, function () {
+        // NOTE: Intentionally not listening for any errors.
+        replServer.listen(options.replPath)
+      })
+    })
+  }
+
+  return replServer
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
 
 </div>
 
