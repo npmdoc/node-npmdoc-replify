@@ -1,6 +1,6 @@
 # npmdoc-replify
 
-#### api documentation for  replify (v1.2.0)  [![npm package](https://img.shields.io/npm/v/npmdoc-replify.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-replify) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-replify.svg)](https://travis-ci.org/npmdoc/node-npmdoc-replify)
+#### basic api documentation for  [replify (v1.2.0)](https://github.com/dshaw/replify)  [![npm package](https://img.shields.io/npm/v/npmdoc-replify.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-replify) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-replify.svg)](https://travis-ci.org/npmdoc/node-npmdoc-replify)
 
 #### Easily add a REPL to your Node.js app.
 
@@ -21,40 +21,52 @@
 ```json
 
 {
-    "name": "replify",
-    "version": "1.2.0",
-    "description": "Easily add a REPL to your Node.js app.",
-    "keywords": [
-        "repl",
-        "observability"
-    ],
     "author": {
         "name": "Daniel D. Shaw",
         "url": "http://dshaw.com"
     },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/dshaw/replify.git"
-    },
     "bugs": {
         "url": "http://github.com/dshaw/replify/issues"
     },
-    "license": "MIT",
-    "main": "replify.js",
-    "scripts": {
-        "test": "./node_modules/.bin/tap test/*.js"
+    "dependencies": {},
+    "description": "Easily add a REPL to your Node.js app.",
+    "devDependencies": {
+        "tap": "~0.4.4"
     },
     "directories": {
         "examples": "examples",
         "test": "test"
     },
-    "dependencies": {},
-    "devDependencies": {
-        "tap": "~0.4.4"
+    "dist": {
+        "shasum": "940166d207d10e98614fe49253ad2f0ac019f7e1",
+        "tarball": "https://registry.npmjs.org/replify/-/replify-1.2.0.tgz"
     },
     "engines": {
         "node": ">= 0.6.0"
-    }
+    },
+    "homepage": "https://github.com/dshaw/replify",
+    "keywords": [
+        "repl",
+        "observability"
+    ],
+    "license": "MIT",
+    "main": "replify.js",
+    "maintainers": [
+        {
+            "name": "dshaw"
+        }
+    ],
+    "name": "replify",
+    "optionalDependencies": {},
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/dshaw/replify.git"
+    },
+    "scripts": {
+        "test": "tap test/*.js"
+    },
+    "version": "1.2.0",
+    "bin": {}
 }
 ```
 
